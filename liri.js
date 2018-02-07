@@ -33,23 +33,59 @@ switch (command) {
 };
 
 function getTweets() {
+	var param = {screen_name: '', count: 20};
+
+	client.get('statuses/user_timeline', param, function(error, tweets, response) {
+		if (!error) {
+			var data =[];
+			for (var i = 0; i < tweets.length; i++){
+				data.push({
+					'created at: ' : tweets[i].created_at,
+					'Tweets:' : tweets[i].text,
+				});
+			}
+			console.log(data);
+			writeToLog(data);
+		}
+	});
 
 };
+
 
 function spotifyThis(songName) {
 	if (songName === " ") {
 		songName = "Revolution"
 	};
 
-	var queryURL = 'http://api.spotify.com/v1/search/q=track'+songName
+	spotify.search({type: 'track', query: SongName}, function(err, data){
+		if (err) {
+			console.log('Error occured: ' + err);
+			return;
+		}
+		var songs = data.tracks.items;
+		var data = [];
 
-	console.log(response)};
+		for(var i = 0; i <songs.length; i++) {
+			data.push({
+				'Artist(s)': songs[i].artists.map(getArtistName),
+				'Song Name': songs[i].name,
+				'Spotify Preview': songs [i].preview_url.
+				'Album': songs[i].album.name,
+			});
+		}
+		console.log(data);
+		writeToLog(data);
 
-	var spotifyResponse = JSON.parse(body);
-	console.log("Artist(s): " +);
-	console.log("Song Name: " +);
-	console.log("Spotify Preview: " +);
-	console.log("Album: " + )
+	});
+	// var queryURL = 'http://api.spotify.com/v1/search/q=track'+songName
+
+	// console.log(response)};
+
+	// var spotifyResponse = JSON.parse(body);
+	// console.log("Artist(s): " +);
+	// console.log("Song Name: " +);
+	// console.log("Spotify Preview: " +);
+	// console.log("Album: " + )
 };
 
 function movieThis(title) {
