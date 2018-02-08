@@ -2,12 +2,12 @@ require("dotenv").config();
 var fs = require('fs');
 var keys = require("./keys.js");
 var request = require('request');
-var Spotify = require('spotify');
-var Twitter = require('client');
+// var Spotify = require('spotify');
+// var Twitter = require('client');
 
 
-var spotify = new Spotify(keys.spotify);
-var client = new Twitter(keys.twitter);
+// var spotify = new Spotify(keys.spotify);
+// var client = new Twitter(keys.twitter);
 
 var command = process.argv[2];
 switch (command) {
@@ -32,24 +32,24 @@ switch (command) {
 		console.log("LIRI doesn't know that");
 };
 
-function getTweets() {
-	var param = {screen_name: '', count: 20};
+// function getTweets() {
+// 	var param = {screen_name: '', count: 20};
 
-	client.get('statuses/user_timeline', param, function(error, tweets, response) {
-		if (!error) {
-			var data =[];
-			for (var i = 0; i < tweets.length; i++){
-				data.push({
-					'created at: ' : tweets[i].created_at,
-					'Tweets:' : tweets[i].text,
-				});
-			}
-			console.log(data);
-			writeToLog(data);
-		}
-	});
+// 	client.get('statuses/user_timeline', param, function(error, tweets, response) {
+// 		if (!error) {
+// 			var data =[];
+// 			for (var i = 0; i < tweets.length; i++){
+// 				data.push({
+// 					'created at: ' : tweets[i].created_at,
+// 					'Tweets:' : tweets[i].text,
+// 				});
+// 			}
+// 			console.log(data);
+// 			writeToLog(data);
+// 		}
+// 	});
 
-};
+// };
 
 
 function spotifyThis(songName) {
@@ -77,46 +77,48 @@ function spotifyThis(songName) {
 		writeToLog(data);
 
 	});
-	// var queryURL = 'http://api.spotify.com/v1/search/q=track'+songName
+	var queryURL = 'http://api.spotify.com/v1/search/q=track'+songName
 
-	// console.log(response)};
+	console.log(response)};
 
-	// var spotifyResponse = JSON.parse(body);
-	// console.log("Artist(s): " +);
-	// console.log("Song Name: " +);
-	// console.log("Spotify Preview: " +);
-	// console.log("Album: " + )
-};
+// 	var spotifyResponse = JSON.parse(body);
+// 	console.log("Artist(s): " + spotifyResponse.);
+// 	console.log("Song Name: " + spotifyResponse.);
+// 	console.log("Spotify Preview: " + spotifyResponse.);
+// 	console.log("Album: " + spotifyResponse.)
+// };
 
-function movieThis(title) {
-	if (movieName == " ") {
-		movieName = 'Mr. Nobody';
-	};
-	var queryURL = 'http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&apikey=trilogy';
+// function movieThis(title) {
+// 	if (movieName == null) {
+// 		movieName = 'Mr. Nobody';
+// 	};
+// 	var queryURL = 'http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&apikey=trilogy';
 
-	request(queryURL, function(error, response, body) {
-		if (!error && response.statusCode === 200) {
-			console.log("-----------------------")
-			console.log("Request complete.");
+// 	request.get(queryURL, function(error, response, body) {
+// 		if (!error && response.statusCode === 200) {
+// 			console.log("-----------------------")
+// 			var movieResponse = JSON.parse(body);
+// 			console.log("Title: " + movieResponse.Title);
+// 			console.log("Year released: " + movieResponse.Year);
+// 			console.log("IMDB rating: " + movieResponse.imdbRating);
+// 			for (var i = 0; i < movieResponse.Ratings.length; i++) {
+// 				if (movieResponse.Ratings[i].Source === 'Rotten Tomatoes') {
+// 					console.log("Rotten Tomatoes Rating: " + 
+// 						movieResponse.Ratings[i].Value);
+// 				};
+// 			};
+// 			console.log("Production country: " + movieResponse.Country);
+// 			console.log("Language: " + movieResponse.Language);
+// 			console.log("Plot: " + movieResponse.Plot);
+// 			console.log("Actors: " + movieResponse.Actors);
+// 		};	
+// 	});
+// };
 
-		
-			var movieResponse = JSON.parse(body);
-			console.log("Title: " + movieResponse.Title);
-			console.log("Year released: " + movieResponse.Year);
-			console.log("IMDB rating: " + movieResponse.imdbRating);
-			console.log("Rotten Tomatoes Rating: " + movieResponse.Ratings);
-			console.log("Production country: " + movieResponse.Country);
-			console.log("Language: " + movieResponse.Language);
-			console.log("Plot: " + movieResponse.Plot);
-			console.log("Actors: " + movieResponse.Actors);
-		};	
-	});
-};
-
-function doWhatItSays() {
-	fs.readFile("random.txt", "utf8", function(error, data) {
-		console.log(data);
-		writeToLog(data);
-		// var dataArr = data.split(',');
-	})
-}
+// function doWhatItSays() {
+// 	fs.readFile("random.txt", "utf8", function(error, data) {
+// 		console.log(data);
+// 		writeToLog(data);
+// 		// var dataArr = data.split(',');
+// 	})
+// }
