@@ -13,5 +13,3 @@ To pull information from those sources on command and display the results to the
 **3. movie-this**: will display the title of the movie, year of release, IMDB rating, rotten tomatoes rating, country the movie was produced in, language, plot and actors.
 **4. do-what-it-says**: will take the text inside the random.txt and use it to call one of LIRI's commands
 
-## Logging results
-In addition to displaying/logging the data in the terminal window, anu commands entered will output to the log.txt file.
