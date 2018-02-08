@@ -9,30 +9,29 @@ var command = process.argv[2];
 var spotify = new Spotify(keys.spotify);
 var client = new twitter(keys.twitter);
 
-switch (command) {
-	case 'my-tweets':
-		getTweets();
-		break;
-
-	case "spotify-this-song":
-		var songName = process.argv[3];
-		spotifyThis();
-		break;
-
-	case 'movie-this':
-		var movieName = process.argv[3];
-		movieThis(movieName);
-		break;
-
-	case 'do-what-it-says':
-		doWhatItSays();
-		break;
-	default:
-		console.log("LIRI doesn't know that");
-};
+// function commandChange(command, response) {
+	switch (command) {
+		case 'my-tweets':
+			getTweets();
+			break;
+		case "spotify-this-song":
+			var songName = process.argv[3];
+			spotifyThis(songName);
+			break;
+		case 'movie-this':
+			var movieName = process.argv[3];
+			movieThis(movieName);
+			break;
+		case 'do-what-it-says':
+			doWhatItSays();
+			break;
+		default:
+			console.log("LIRI doesn't know that");
+	};
+// };
 
 //===============TWEETS==============================
-function getTweets(num) {
+function getTweets(count) {
 	// var twitterUsername = process.argv[3];
 	var params = {screen_name: 'DaniCarter3', count: 20};
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
@@ -40,8 +39,8 @@ function getTweets(num) {
 			console.log("----------------------");
 			var data = [];
 			for (var i = 0; i < tweets.length; i++) {
-					console.log('created at: ' + tweets[i].created_at);
-					console.log('Tweets: ' + tweets[i].text);
+				console.log('created at: ' + tweets[i].created_at);
+				console.log('Tweets: ' + tweets[i].text);
 			};		
 		};
 	});
@@ -70,9 +69,7 @@ function spotifyThis(songName) {
 		}
 
 		var songResponse = data.tracks.items;
-
-		var songArray = []
-
+		// var songArray = []
 		for (var i = 0; i < songResponse.length; i++) {
 			if (songResponse [i] != undefined) {
 
@@ -90,7 +87,7 @@ function spotifyThis(songName) {
 };
 
 //=======================Movie This===========================
-function movieThis(title) {
+function movieThis(movieName) {
 	if (movieName == null) {
 		movieName = 'Mr. Nobody';
 		console.log("You didn\'t input a movie.");
@@ -124,24 +121,32 @@ function doWhatItSays() {
 		if (error) {
 			return console.log(error);
 		}
-		var data = data.split(',');
+		var dataArr = data.split(',');
+		commandChange(array[0], array[1])
+
+		// if (dataArr.legnth == 2) {
+		// 	pick(dataArr[0]. dataArr[1]);
+		// } else if (dataArr.length == 1) {
+		// 	pick(dataArr[0]);
+		// }
 	});
 };
 
 //======================WRITE TO LOG================================
-function writeToLog(data) {
-	fs.appendFile("log.txt", '\r\n\r\n');
+// function writeToLog(data) {
+// 	fs.appendFile("log.txt", '\r\n\r\n');
 
-	fs.appendFile("log.txt", JSON.stringify(data), function(err){
-		if (err) {
-			return console.log(err);
-		}
-		console.log("log.text was updated!");
-	});
-};
+// 	fs.appendFile("log.txt", JSON.stringify(data), function(err){
+// 		if (err) {
+// 			return console.log(err);
+// 		}
+// 		console.log("log.text was updated!");
+// 	});
+// };
 
 //Add writeToLog(data) to end of functions for bonus
 
+//========================INSTRUCTIONS================================
 
 
 
