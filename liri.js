@@ -2,9 +2,12 @@ require("dotenv").config();
 var fs = require('fs');
 var keys = require("./keys.js");
 var request = require('request');
-var Spotify = require('spotify');
+var Spotify = require('node-spotify-api');
 var twitter = require('twitter');
 var command = process.argv[2];
+
+var spotify = new Spotify(keys.spotify);
+var client = new twitter(keys.twitter);
 
 switch (command) {
 	case 'my-tweets':
@@ -29,54 +32,60 @@ switch (command) {
 };
 
 //===============TWEETS==============================
-function getTweets() {
-	var data = [];
-	var client = new twitter(keys.twitter);
-	var params = {screen_name: twitterUsername, count: 20};
-	var twitterUsername = process.argv[3];
-	if (twitterUsername == null) {
-		twitterUsername = 'DaniCarter3'
-	};
-
-	client.get('statuses/user_timeline', params, function(error, data, response) {
+function getTweets(num) {
+	// var twitterUsername = process.argv[3];
+	var params = {screen_name: 'DaniCarter3', count: 20};
+	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (!error && response.statusCode ===200) {
 			console.log("----------------------");
-			for (var i = 0; i < data.length; i++) {
-				data.push({
-					'created at: ' : data[i].created_at,
-					'Tweets: ' : data[i].text,
-				});
-			};
-			console.log(twitterUsername);
-			console.log(response);			
+			var data = [];
+			for (var i = 0; i < tweets.length; i++) {
+					console.log('created at: ' + tweets[i].created_at);
+					console.log('Tweets: ' + tweets[i].text);
+			};		
 		};
 	});
 };
 
 //=================SPOTIFY=====================================
+var song = function(artist, song, album, preview) {
+	this.artist = artist;
+	this.song = song;
+	this.album = album;
+	this.preview = preview;
+};
+
 function spotifyThis(songName) {
-	var data = [];
-	var spotify = new Spotify(keys.spotify);
+	var songName = process.argv[3];
 	if (songName == null) {
-		songName = "Revolution"
+		songName = "The Sign";
+		console.log("You didn\'t input a song.");
+		console.log("So we picked: " + songName + " for you.");
 	};
 
 	spotify.search({
-		type: 'track', 
-		query: SongName + '&limit=1&'
-	}, function(error, data){
-		if (!error && response.statusCode ===200) {
-			console.log("----------------------");
-			for (var i = 0; i < songs.length; i++) {
-				data.push({
-					'artist(s): ' :songs[i].artists.map(getArtistsNames),
-					'song name: ' :songs[i].name,
-					'preview song: ' : songs[i].preview_url,
-					'album: ' : songs[i].album.name,
-				});
-				console.log(data);
-			};
-		};
+		type: 'track', query: songName,limit: '1'}, function(err, data) {
+		if (err) {
+			return console.log('Error occured: ' + err);
+		}
+
+		var songResponse = data.tracks.items;
+
+		var songArray = []
+
+		for (var i = 0; i < songResponse.length; i++) {
+			if (songResponse [i] != undefined) {
+
+				var newSong = new song (
+					songResponse[i].artists[0].name,
+					songResponse[i].name,
+					songResponse[i].album.name,
+					songResponse[i].preview_url);
+
+				// songArray.push(newSong);
+				console.log(newSong);
+			}
+		}
 	});
 };
 
@@ -84,9 +93,10 @@ function spotifyThis(songName) {
 function movieThis(title) {
 	if (movieName == null) {
 		movieName = 'Mr. Nobody';
+		console.log("You didn\'t input a movie.");
+		console.log("So we picked: " + movieName + " for you.")
 	};
 	var queryURL = 'http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&apikey=trilogy';
-
 	request.get(queryURL, function(error, response, body) {
 		if (!error && response.statusCode === 200) {
 			console.log("-----------------------")
@@ -111,35 +121,29 @@ function movieThis(title) {
 //===================DO WHAT IT SAYS====================================
 function doWhatItSays() {
 	fs.readFile("random.txt", "utf8", function(error, data) {
-		data = data.split(',');
-		var command;
-		var parameter;
-
-		if (data.length == 2) {
-			command = data[0];
-			parameter = data [1];
+		if (error) {
+			return console.log(error);
 		}
-		parameter = parameter.replace('"', '');
-		parameter = prarameter.replace('"', '');
-
-		switch (command) {
-			case 'my-tweets':
-			value = parameter;
-			getTweets();
-			break;
-
-			case 'spotify-this-song':
-			value = parameter;
-			spotifyThis();
-			break;
-
-			case 'movie-this' :
-			value = parameter;
-			movieThis(movieName);
-			break;
-		}
+		var data = data.split(',');
 	});
 };
+
+//======================WRITE TO LOG================================
+function writeToLog(data) {
+	fs.appendFile("log.txt", '\r\n\r\n');
+
+	fs.appendFile("log.txt", JSON.stringify(data), function(err){
+		if (err) {
+			return console.log(err);
+		}
+		console.log("log.text was updated!");
+	});
+};
+
+//Add writeToLog(data) to end of functions for bonus
+
+
+
 
 
 
